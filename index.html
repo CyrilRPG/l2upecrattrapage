@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Diploma Santé — Plateforme de rattrapage · L2 UPEC</title>
-  <meta name="description" content="Plateforme de rattrapage - L2 UPEC (Diploma Santé). Choisissez votre classe et groupe de TD pour voir les Conflits et les solutions disponibles." />
+  <meta name="description" content="Plateforme de rattrapage - L2 UPEC (Diploma Santé). Choisissez votre classe et groupe de TD pour voir les problèmes et les solutions disponibles." />
   <style>
     :root{
       --brand:#0ea5e9; /* cyan-500 */
@@ -66,7 +66,7 @@
       <div class="logo" aria-hidden="true"></div>
       <div>
         <h1>Diploma Santé · <span class="subtitle">Plateforme de rattrapage — L2 UPEC</span></h1>
-        <div class="subtitle">Choisissez votre <strong>classe</strong> et votre <strong>groupe de TD</strong>, puis cliquez sur <em>Afficher</em> pour voir d'abord les <strong>Conflits</strong>, puis les <strong>solutions</strong>.</div>
+        <div class="subtitle">Choisissez votre <strong>classe</strong> et votre <strong>groupe de TD</strong>, puis cliquez sur <em>Afficher</em> pour voir d'abord les <strong>problèmes</strong>, puis les <strong>solutions</strong>.</div>
       </div>
     </header>
 
@@ -75,7 +75,7 @@
         <div>
           <label for="classe">Classe</label>
           <select id="classe">
-            <option value="1" selected>Classe 1</option>
+            <option value="1">Classe 1</option>
             <option value="2">Classe 2</option>
             <option value="3">Classe 3</option>
           </select>
@@ -83,7 +83,7 @@
         <div>
           <label for="groupe">Groupe de TD</label>
           <select id="groupe">
-            <option value="1" selected>Groupe 1</option>
+            <option value="1">Groupe 1</option>
             <option value="2">Groupe 2</option>
             <option value="3">Groupe 3</option>
             <option value="4">Groupe 4</option>
@@ -112,7 +112,7 @@
           </div>
         </div>
 
-        <h3 class="section-title">Conflits</h3>
+        <h3 class="section-title">Problèmes</h3>
         <div class="list" id="probList"></div>
 
         <h3 class="section-title">Solutions</h3>
@@ -130,6 +130,7 @@
   <script>
     // --- Utilitaires d'affichage ---
     const mapMatiere = (label) => {
+      // Remplacer les abréviations par les noms complets
       return label
         .replace(/\bBiomol\b/gi, 'Biologie moléculaire')
         .replace(/\bBiocell\b/gi, 'Biologie cellulaire')
@@ -139,11 +140,12 @@
         .replace(/\bImmuno\b/gi, 'Immunologie');
     };
     const normalizeCours = (txt) => {
+      // (C1) → (Classe 1), etc. + uniformiser "pas de solution"
       return txt
         .replace(/\(C([123])\)/g, '(Classe $1)')
         .replace(/:\s*pas de solution/gi, ' : Pas de solution')
         .replace(/\bPas de solutions\b/gi, 'Pas de solution')
-        .replace(/\bde 14h à 16\b/g, 'de 14h à 16h');
+        .replace(/\bde 14h à 16\b/g, 'de 14h à 16h'); // petite correction d'heure manquante
     };
     const formatItem = (raw) => {
       const replaced = normalizeCours(mapMatiere(raw.trim()));
@@ -153,7 +155,7 @@
       return { course, detail: detail ? `: ${detail}` : '' };
     };
 
-    // --- Données Conflits ---
+    // --- Données Problèmes ---
     const PROBLEMES = {
       "1-1": ["16/10 tous les cours"],
       "2-1": ["16/10 tous les cours"],
@@ -204,7 +206,7 @@
       "3-12": ["27/11 cours de 14h à 16h","04/11 cours de 14h à 16h"],
     };
 
-    // --- Données Solutions ---
+    // --- Données Solutions (identiques, avec renommages/normalisations à l'affichage) ---
     const SOLUTIONS = {
       "1-1": [
         "Biophysique (C3) : 04/11 de 14h à 16h",
@@ -400,79 +402,75 @@
     const badgeGroupe = document.getElementById('badgeGroupe');
     const emptyState = document.getElementById('emptyState');
 
-    function fillList(container, arr){
-      container.innerHTML = '';
-      arr.forEach(txt => {
-        const {course, detail} = formatItem(txt);
+    function render(){
+      const key = `${classeEl.value}-${groupeEl.value}`;
+      const probs = PROBLEMES[key] || [];
+      const sols = SOLUTIONS[key] || [];
+
+      probList.innerHTML = '';
+      solList.innerHTML = '';
+      resTitle.textContent = 'Récapitulatif';
+      badgeClasse.textContent = `Classe ${classeEl.value}`;
+      badgeGroupe.textContent = `Groupe ${groupeEl.value}`;
+
+      const hasData = (probs && probs.length) || (sols && sols.length);
+      emptyState.hidden = !!hasData;
+
+      // Problèmes d'abord
+      probs.forEach(txt => {
         const li = document.createElement('div');
         li.className = 'item';
         const dot = document.createElement('span');
         dot.className = 'dot';
+        const strong = document.createElement('strong');
+        strong.textContent = 'Conflit';
+        const span = document.createElement('span');
+        span.className = 'muted';
+        span.textContent = ` : ${txt}`;
+        li.append(dot, strong, span);
+        probList.appendChild(li);
+      });
+
+      // Puis Solutions avec expansions demandées
+      sols.forEach(txt => {
+        const li = document.createElement('div');
+        li.className = 'item';
+        const dot = document.createElement('span');
+        dot.className = 'dot';
+        const { course, detail } = formatItem(txt);
         const strong = document.createElement('strong');
         strong.textContent = course;
         const span = document.createElement('span');
         span.className = 'muted';
         span.textContent = detail;
         li.append(dot, strong, span);
-        container.appendChild(li);
+        solList.appendChild(li);
       });
-    }
 
-    function render(){
-      const key = `${classeEl.value}-${groupeEl.value}`;
-
-      // Badges
-      badgeClasse.textContent = `Classe ${classeEl.value}`;
-      badgeGroupe.textContent = `Groupe ${groupeEl.value}`;
-
-      // Récupération données
-      let probs = PROBLEMES[key] || [];
-      let sols  = SOLUTIONS[key] || [];
-
-      // ✅ Cas spécial demandé : Classe 1 / Groupe 1 => afficher "problème" et "solution:"
-      if (key === '1-1') {
-        probs = ['problème'];
-        sols  = ['solution:'];
-      }
-
-      // Affichage
-      fillList(probList, probs);
-      fillList(solList, sols);
-
-      const hasAny = probs.length > 0 || sols.length > 0;
-      emptyState.hidden = hasAny; // montrer le vide si rien à afficher
       results.classList.add('active');
-      resTitle.textContent = hasAny ? 'Récapitulatif' : 'Aucun résultat';
     }
 
     showBtn.addEventListener('click', render);
 
     copyBtn.addEventListener('click', () => {
       const key = `${classeEl.value}-${groupeEl.value}`;
-      let probs = PROBLEMES[key] || [];
-      let sols  = SOLUTIONS[key] || [];
-
-      // même cas spécial pour la copie
-      if (key === '1-1') {
-        probs = ['problème'];
-        sols  = ['solution:'];
-      }
-
+      const probs = PROBLEMES[key] || [];
+      const sols = (SOLUTIONS[key] || []).map(s => {
+        const {course, detail} = formatItem(s);
+        return `${course}${detail}`;
+      });
       const header = `Classe ${classeEl.value}, Groupe ${groupeEl.value}\n`;
-      const blocP = probs.length ? `\nConflits:\n` + probs.map(i=>`• ${normalizeCours(mapMatiere(i))}`).join('\n') : '';
-      const blocS = sols.length ? `\nSolutions:\n` + sols.map(i=>`• ${normalizeCours(mapMatiere(i))}`).join('\n') : '';
-      const body = (blocP + blocS) || '\nAucune information.';
-      const text = header + body;
-
+      const blockP = probs.length ? `Problèmes\n` + probs.map(i=>`• ${i}`).join('\n') + '\n\n' : '';
+      const blockS = `Solutions\n` + (sols.length ? sols.map(i=>`• ${i}`).join('\n') : 'Aucune information.');
+      const text = header + blockP + blockS;
       navigator.clipboard.writeText(text).then(()=>{
         copyBtn.textContent = 'Copié !';
         setTimeout(()=> copyBtn.textContent = 'Copier', 1400);
       });
     });
 
-    // État par défaut : rien d'affiché
-    results.classList.remove('active');
-    emptyState.hidden = true;
+    // Affiche automatiquement une première combinaison
+    render();
 
     // Année
     document.getElementById('year').textContent = new Date().getFullYear();
