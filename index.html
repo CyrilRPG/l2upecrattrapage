@@ -395,8 +395,7 @@
     const showBtn = document.getElementById('showBtn');
     const copyBtn = document.getElementById('copyBtn');
     const results = document.getElementById('results');
-    const probList = document.getElementById('probList');
-    const solList = document.getElementById('solList');
+    const resList = document.getElementById('resList');
     const resTitle = document.getElementById('resTitle');
     const badgeClasse = document.getElementById('badgeClasse');
     const badgeGroupe = document.getElementById('badgeGroupe');
@@ -404,49 +403,34 @@
 
     function render(){
       const key = `${classeEl.value}-${groupeEl.value}`;
-      const probs = PROBLEMES[key] || [];
-      const sols = SOLUTIONS[key] || [];
-
-      probList.innerHTML = '';
-      solList.innerHTML = '';
-      resTitle.textContent = 'Récapitulatif';
+      const items = SOLUTIONS[key];
+      resList.innerHTML = '';
+      resTitle.textContent = 'Solutions';
       badgeClasse.textContent = `Classe ${classeEl.value}`;
       badgeGroupe.textContent = `Groupe ${groupeEl.value}`;
 
-      const hasData = (probs && probs.length) || (sols && sols.length);
-      emptyState.hidden = !!hasData;
-
-      // Problèmes d'abord
-      probs.forEach(txt => {
+      if (!items || items.length === 0) {
+        emptyState.hidden = false;
+        results.classList.add('active');
+        return;
+      }
+      emptyState.hidden = true;
+      items.forEach(txt => {
         const li = document.createElement('div');
         li.className = 'item';
         const dot = document.createElement('span');
         dot.className = 'dot';
         const strong = document.createElement('strong');
-        strong.textContent = 'Conflit';
+        const parts = txt.split(':');
+        const course = parts[0] || '';
+        const detail = parts.slice(1).join(':').trim();
+        strong.textContent = course.trim();
         const span = document.createElement('span');
         span.className = 'muted';
-        span.textContent = ` : ${txt}`;
+        span.textContent = detail ? `: ${detail}` : '';
         li.append(dot, strong, span);
-        probList.appendChild(li);
+        resList.appendChild(li);
       });
-
-      // Puis Solutions avec expansions demandées
-      sols.forEach(txt => {
-        const li = document.createElement('div');
-        li.className = 'item';
-        const dot = document.createElement('span');
-        dot.className = 'dot';
-        const { course, detail } = formatItem(txt);
-        const strong = document.createElement('strong');
-        strong.textContent = course;
-        const span = document.createElement('span');
-        span.className = 'muted';
-        span.textContent = detail;
-        li.append(dot, strong, span);
-        solList.appendChild(li);
-      });
-
       results.classList.add('active');
     }
 
@@ -454,15 +438,9 @@
 
     copyBtn.addEventListener('click', () => {
       const key = `${classeEl.value}-${groupeEl.value}`;
-      const probs = PROBLEMES[key] || [];
-      const sols = (SOLUTIONS[key] || []).map(s => {
-        const {course, detail} = formatItem(s);
-        return `${course}${detail}`;
-      });
-      const header = `Classe ${classeEl.value}, Groupe ${groupeEl.value}\n`;
-      const blockP = probs.length ? `Problèmes\n` + probs.map(i=>`• ${i}`).join('\n') + '\n\n' : '';
-      const blockS = `Solutions\n` + (sols.length ? sols.map(i=>`• ${i}`).join('\n') : 'Aucune information.');
-      const text = header + blockP + blockS;
+      const items = SOLUTIONS[key] || [];
+      const header = `Solutions — Classe ${classeEl.value}, Groupe ${groupeEl.value}\n`;
+      const text = header + (items.length? items.map(i=>`• ${i}`).join('\n') : 'Aucune information.');
       navigator.clipboard.writeText(text).then(()=>{
         copyBtn.textContent = 'Copié !';
         setTimeout(()=> copyBtn.textContent = 'Copier', 1400);
@@ -470,7 +448,11 @@
     });
 
     // Affiche automatiquement une première combinaison
-    render();
+    // render(); // ⟵ SUPPRIMÉ : ne rien afficher par défaut
+
+    // Assure que la section résultats est bien masquée au chargement
+    results.classList.remove('active');
+    emptyState.hidden = true;
 
     // Année
     document.getElementById('year').textContent = new Date().getFullYear();
