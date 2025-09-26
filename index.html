@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Diploma Santé — Plateforme de rattrapage · L2 UPEC</title>
+  <meta name="description" content="Plateforme de rattrapage - L2 UPEC (Diploma Santé). Choisissez votre classe et groupe de TD pour voir les problèmes et les solutions disponibles." />
+  <style>
+    :root{
+      --brand:#0ea5e9; /* cyan-500 */
+      --brand-dark:#0284c7;/* cyan-600 */
+      --ink:#0f172a; /* slate-900 */
+      --muted:#475569; /* slate-600 */
+      --bg:#f8fafc; /* slate-50 */
+      --card:#ffffff;
+      --ring:#bae6fd; /* cyan-200 */
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,"Noto Sans",sans-serif;color:var(--ink);background:linear-gradient(180deg,var(--bg),#fff)}
+    .container{max-width:980px;margin-inline:auto;padding:16px}
+    @media (min-width:640px){.container{padding:24px}}
+    header{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,#ffffffee,#ffffffcc);backdrop-filter:saturate(1.2) blur(6px);display:flex;align-items:center;gap:14px;margin:0 0 16px;padding:10px 6px;border-bottom:1px solid #e2e8f0}
+    .logo{width:40px;height:40px;flex:0 0 auto;border-radius:12px;background:conic-gradient(from 180deg at 50% 50%, #22d3ee, #38bdf8, #7dd3fc, #22d3ee);box-shadow:0 8px 24px rgba(14,165,233,.35)}
+    h1{font-size:clamp(18px,3.6vw,28px);margin:0;line-height:1.1}
+    .subtitle{color:var(--muted)}
+
+    .card{background:var(--card);border:1px solid #e2e8f0;border-radius:16px;box-shadow:0 8px 30px rgba(2,132,199,.08);padding:16px}
+    @media (min-width:640px){.card{padding:18px}}
+    .grid{display:grid;grid-template-columns:1fr;gap:16px}
+    @media (min-width:820px){.grid{grid-template-columns:1.1fr 2fr}}
+
+    label{display:block;font-weight:600;margin:4px 0 8px}
+    select{appearance:none;width:100%;padding:14px;border:1px solid #e2e8f0;border-radius:12px;background:#fff;font:inherit;color:var(--ink);outline:none;box-shadow:0 1px 0 rgba(2,132,199,.04);touch-action:manipulation}
+    select:focus{border-color:var(--brand);box-shadow:0 0 0 4px var(--ring)}
+
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    button{cursor:pointer;border:none;border-radius:12px;padding:14px 16px;font-weight:700;touch-action:manipulation}
+    .btn-primary{background:var(--brand);color:#fff}
+    .btn-primary:hover{background:var(--brand-dark)}
+    .btn-soft{background:#e2f3fb;color:#075985}
+
+    .results{display:none}
+    .results.active{display:block}
+
+    .title-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .title-row h2{margin:0;font-size:20px}
+    .badges{display:flex;gap:8px;flex-wrap:wrap}
+    .badge{padding:6px 10px;border-radius:999px;background:#f1f5f9;color:#0f172a;font-weight:600;font-size:12px;border:1px solid #e2e8f0}
+
+    .list{margin:12px 0 0;display:grid;gap:10px}
+    .item{padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;display:flex;align-items:center;gap:12px}
+    .dot{width:10px;height:10px;border-radius:999px;background:var(--brand)}
+    .item strong{font-weight:800}
+    .muted{color:var(--muted)}
+
+    .section-title{margin-top:6px;font-size:16px}
+    .empty{padding:18px;border:1px dashed #cbd5e1;border-radius:12px;background:#f8fafc}
+
+    footer{margin-top:20px;color:var(--muted);font-size:12px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>Diploma Santé · <span class="subtitle">Plateforme de rattrapage — L2 UPEC</span></h1>
+        <div class="subtitle">Choisissez votre <strong>classe</strong> et votre <strong>groupe de TD</strong>, puis cliquez sur <em>Afficher</em> pour voir d'abord les <strong>problèmes</strong>, puis les <strong>solutions</strong>.</div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <section class="card" aria-label="Choix">
+        <div>
+          <label for="classe">Classe</label>
+          <select id="classe">
+            <option value="1">Classe 1</option>
+            <option value="2">Classe 2</option>
+            <option value="3">Classe 3</option>
+          </select>
+        </div>
+        <div>
+          <label for="groupe">Groupe de TD</label>
+          <select id="groupe">
+            <option value="1">Groupe 1</option>
+            <option value="2">Groupe 2</option>
+            <option value="3">Groupe 3</option>
+            <option value="4">Groupe 4</option>
+            <option value="5">Groupe 5</option>
+            <option value="6">Groupe 6</option>
+            <option value="7">Groupe 7</option>
+            <option value="8">Groupe 8</option>
+            <option value="9">Groupe 9</option>
+            <option value="10">Groupe 10</option>
+            <option value="11">Groupe 11</option>
+            <option value="12">Groupe 12</option>
+          </select>
+        </div>
+        <div class="actions">
+          <button class="btn-primary" id="showBtn">Afficher</button>
+          <button class="btn-soft" id="copyBtn" title="Copier les résultats" aria-label="Copier">Copier</button>
+        </div>
+      </section>
+
+      <section class="card results" id="results" aria-live="polite">
+        <div class="title-row">
+          <h2 id="resTitle">Récapitulatif</h2>
+          <div class="badges">
+            <span class="badge" id="badgeClasse"></span>
+            <span class="badge" id="badgeGroupe"></span>
+          </div>
+        </div>
+
+        <h3 class="section-title">Problèmes</h3>
+        <div class="list" id="probList"></div>
+
+        <h3 class="section-title">Solutions</h3>
+        <div class="list" id="solList"></div>
+
+        <div class="empty muted" id="emptyState" hidden>Aucune information à afficher pour cette combinaison.</div>
+      </section>
+    </div>
+
+    <footer>
+      © <span id="year"></span> Diploma Santé — Plateforme de rattrapage L2 UPEC. Données fournies par l'équipe pédagogique.
+    </footer>
+  </div>
+
+  <script>
+    // --- Utilitaires d'affichage ---
+    const mapMatiere = (label) => {
+      // Remplacer les abréviations par les noms complets
+      return label
+        .replace(/\bBiomol\b/gi, 'Biologie moléculaire')
+        .replace(/\bBiocell\b/gi, 'Biologie cellulaire')
+        .replace(/\bBioch\b/gi, 'Biochimie')
+        .replace(/\bBiostats\b/gi, 'Biostatistiques')
+        .replace(/\bBiophy\b/gi, 'Biophysique')
+        .replace(/\bImmuno\b/gi, 'Immunologie');
+    };
+    const normalizeCours = (txt) => {
+      // (C1) → (Classe 1), etc. + uniformiser "pas de solution"
+      return txt
+        .replace(/\(C([123])\)/g, '(Classe $1)')
+        .replace(/:\s*pas de solution/gi, ' : Pas de solution')
+        .replace(/\bPas de solutions\b/gi, 'Pas de solution')
+        .replace(/\bde 14h à 16\b/g, 'de 14h à 16h'); // petite correction d'heure manquante
+    };
+    const formatItem = (raw) => {
+      const replaced = normalizeCours(mapMatiere(raw.trim()));
+      const parts = replaced.split(':');
+      const course = (parts[0]||'').trim();
+      const detail = parts.slice(1).join(':').trim();
+      return { course, detail: detail ? `: ${detail}` : '' };
+    };
+
+    // --- Données Problèmes ---
+    const PROBLEMES = {
+      "1-1": ["16/10 tous les cours"],
+      "2-1": ["16/10 tous les cours"],
+      "3-1": ["08/10 cours de 14h à 16h"],
+
+      "1-2": ["16/10 cours de 14h à 16h"],
+      "2-2": ["16/10 cours de 14h à 16h"],
+      "3-2": ["08/10 cours de 14h à 16h"],
+
+      "1-3": ["30/10 tous les cours","20/11 cours de 14h à 18h15","27/11 cours de 11h15 à 13h15"],
+      "2-3": ["20/11 tous les cours"],
+      "3-3": ["30/10 cours de 9h à 13h15","20/11 cours à 14h"],
+
+      "1-4": ["30/10 tous les cours","20/11 cours de 14h à 18h15","27/11 cours de 11h15 à 13h15"],
+      "2-4": ["20/11 tous les cours"],
+      "3-4": ["30/10 cours de 9h à 13h15","20/11 cours de 14h"],
+
+      "1-5": ["09/10 tous les cours","27/11 cours de 14h à 18h15"],
+      "2-5": ["09/10 cours de 16h15 à 18h15","27/11 tous les cours"],
+      "3-5": ["09/10 cours de 14h à 16h","30/10 cours de 14h à 16h","27/11 tous les cours"],
+
+      "1-6": ["09/10 tous les cours","20/11 cours de 11h15 à 13h15","27/11 cours de 14h à 18h15"],
+      "2-6": ["09/10 cours de 16h15 à 18h15","27/11 tous les cours"],
+      "3-6": ["09/10 cours de 14h à 16h","30/10 tous les cours","20/11 cours de 11h15 à 13h15","27/11 tous les cours"],
+
+      "1-7": ["20/11 cours de 11h15 à 13h15"],
+      "2-7": ["02/10 tous les cours"],
+      "3-7": ["02/10 cours de 14h à 16h","12/11 tous les cours","20/11 cours de 9h à 13h15"],
+
+      "1-8": ["—"],
+      "2-8": ["02/10 cours de 14h à 16h"],
+      "3-8": ["02/10 cours de 14h à 16h","12/11 tous les cours"],
+
+      "1-9": ["13/11 tous les cours","27/11 cours de 11h15 à 13h15","04/12 cours de 11h15 à 13h15"],
+      "2-9": ["13/11 tous les cours"],
+      "3-9": ["04/12 cours de 9h à 13h15"],
+
+      "1-10": ["13/11 tous les cours","27/11 cours de 11h15 à 13h15","04/12 cours de 11h15 à 13h15"],
+      "2-10": ["13/11 tous les cours"],
+      "3-10": ["04/12 cours de 9h à 13h15"],
+
+      "1-11": ["16/10 tous les cours","27/11 cours de 14h à 18h","04/12 cours de 14h à 18h"],
+      "2-11": ["16/10 tous les cours","27/11 cours de 14h à 18h","04/12 cours de 14h à 18h"],
+      "3-11": ["27/11 cours de 14h à 16h","04/11 tous les cours"],
+
+      "1-12": ["16/10 tous les cours","27/11 cours de 14h à 18h","04/12 cours de 14h à 18h"],
+      "2-12": ["16/10 tous les cours","27/11 tous les cours","04/12 tous les cours"],
+      "3-12": ["27/11 cours de 14h à 16h","04/11 cours de 14h à 16h"],
+    };
+
+    // --- Données Solutions (identiques, avec renommages/normalisations à l'affichage) ---
+    const SOLUTIONS = {
+      "1-1": [
+        "Biophysique (C3) : 04/11 de 14h à 16h",
+        "Biomol (C2) : 02/10 de 14h à 16h",
+      ],
+      "2-1": [
+        "Biomol (C3) : 20/11 de 16h15 à 18h15",
+        "Biophysique (C3) : 04/11 de 14h à 16h",
+      ],
+      "3-1": [
+        "Biomol (C1) : 09/11 de 16h15 à 18h15",
+      ],
+      "1-2": [
+        "Biophysique (C3) : 04/11 de 14h à 16",
+      ],
+      "2-2": [
+        "Biomol (C3) : 20/11 de 16h15 à 18h15",
+      ],
+      "3-2": [
+        "Biomol (C1) : 09/11 de 16h15 à 18h15",
+      ],
+      "1-3": [
+        "Biostats : Pas de solution",
+        "Biocell (C3) : 21/10 de 14h à 16h",
+        "Biomol (C3) : 24/11 de 16h15 à 18h15",
+        "Biophysique (C3) : 17/11 de 14h à 16h",
+        "Biocell (C2) : 28/11 de 14h à 16h",
+      ],
+      "2-3": [
+        "Biomol (C3) : 24/11 de 16h15 à 18h15",
+        "Biophysique (C3) : 17/11 de 14h à 16h",
+      ],
+      "3-3": [
+        "Bioch (C1) : 10/11 de 9h à 11h",
+        "Biostats (C2) : 27/10 de 11h15 à 13h15",
+        "Immuno (C1) : 10/11 de 11h15 à 13h15",
+      ],
+      "1-4": [
+        "Biostats : Pas de solution",
+        "Biocell (C3) : 21/10 de 14h à 16h",
+        "Biomol (C3) : 24/11 de 16h15 à 18h15",
+        "Biophysique (C3) : 17/11 de 14h à 16h",
+        "Biocell (C2) : 28/11 de 14h à 16h",
+      ],
+      "2-4": [
+        "Biomol (C3) : 24/11 de 16h15 à 18h15",
+        "Biophysique (C3) : 17/11 de 14h à 16h",
+      ],
+      "3-4": [
+        "Bioch (C1) : 10/11 de 9h à 11h",
+        "Biostats (C2) : 27/10 de 11h15 à 13h15",
+        "Immuno (C1) : 10/11 de 11h15 à 13h15",
+      ],
+      "1-5": [
+        "Biophysique : Pas de solution",
+        "Biomol (C3) : 08/10 de 14h à 16h",
+        "Biophysique (C3) : 24/11 de 14h à 16h",
+        "Biomol (C3) : 01/12 de 16h15 à 18h15",
+      ],
+      "2-5": [
+        "Biophysique : Pas de solution",
+        "Biomol (C3) : 01/12 de 16h15 à 18h15",
+        "Biophysique (C3) : 24/11 de 14h à 16h",
+      ],
+      "3-5": [
+        "Immuno (C1) : 29/09 de 9h à 11h",
+        "Immuno (C1) : 27/10 de 11h15 à 13h15",
+        "Biocell (C2) : 21/11 de 14h à 16h",
+      ],
+      "1-6": [
+        "Biophysique : Pas de solution",
+        "Biomol (C3) : 08/10 de 14h à 16h",
+        "Biocell (C2) : 21/11 de 14h à 16h",
+        "Biophysique (C3) : 24/11 de 14h à 16h",
+        "Biomol (C3) : 01/12 de 16h15 à 18h15",
+      ],
+      "2-6": [
+        "Biophysique : Pas de solution",
+        "Biomol (C3) : 01/12 de 16h15 à 18h15",
+        "Biophysique (C3) : 24/11 de 14h à 16h",
+      ],
+      "3-6": [
+        "Immuno (C1) : 29/09 de 9h à 11h",
+        "Immuno (C1) : 27/10 de 11h15 à 13h15",
+        "Bioch (C2) : 24/11 de 9h à 11h",
+        "Biostats (C2) : 24/11 de 11h15 à 13h15",
+        "Biocell (C2) : 21/11 de 14h à 16h",
+      ],
+      "1-7": [
+        "Biocell (C2) : 21/11 de 14h à 16h",
+      ],
+      "2-7": [
+        "Biomol : Pas de solution",
+        "Biophysique : Pas de solution",
+      ],
+      "3-7": [
+        "Biophysique : Pas de solution",
+        "Biophy (C2) : 13/11 de 16h15 à 18h15",
+        "Biocell (C1) : 11/11 de 14h à 16h",
+        "Bioch (C2) : 24/11 de 9h à 11h",
+        "Biostats (C2) : 24/11 de 11h15 à 13h15",
+      ],
+      "1-8": [
+        "-",
+      ],
+      "2-8": [
+        "Biomol: pas de solution",
+      ],
+      "3-8": [
+        "Biophy (C2) : 02/11 de 16h15 à 18h15",
+        "Biophy (C2) : 13/11 de 16h15 à 18h15",
+        "Biocell (C1) : 11/11 de 14h à 16h",
+      ],
+      "1-9": [
+        "Biophysique (C3) : 12/11 de 14h à 16h",
+        "Biomol (C3) : 17/11 de 16h15 à 18h15",
+        "Biocell (C2) : 28/11 de 14h à 16h",
+        "Biocell (C2) : 01/12 de 14h à 16h",
+      ],
+      "2-9": [
+        "Biomol (C3) : 17/11 de 16h15 à 18h15",
+        "Biophysique (C3) : 12/11 de 14h à 16h",
+      ],
+      "3-9": [
+        "Bioch (C1) : 01/12 de 11h15 à 13h15",
+        "Biostats (C1) : 01/12 de 9h à 11h",
+      ],
+      "1-10": [
+        "Biophysique (C3) : 12/11 de 14h à 16h",
+        "Biomol (C2) : 17/11 de 16h15 à 18h15",
+        "Biocell (C2) : 28/11 de 14h à 16h",
+        "Biocell (C2) : 01/12 de 14h à 16h",
+      ],
+      "2-10": [
+        "Biomol (C3) : 17/11 de 16h15 à 18h15",
+        "Biophysique (C3) : 12/11 de 14h à 16h",
+      ],
+      "3-10": [
+        "Bioch (C1) : 01/12 de 11h15 à 13h15",
+        "Biostats (C1) : 01/12 de 9h à 11h",
+      ],
+      "1-11": [
+        "Biophysique (C3) : 03/11 de 14h à 16h",
+        "Biomol : Pas de solutions",
+        "Biophysique (C3) : 24/11 de 14h à 16h",
+        "Biomol (C3) : 01/12 de 16h15 à 18h15",
+        "Biophysique (C3) : 01/12 de 14h à 16h",
+        "Biomol (C3) : 02/12 de 16h15 à 18h15",
+      ],
+      "2-11": [
+        "Biomol (C3) : 20/10 de 16h15 à 18h15",
+        "Biophysique : Pas de solution",
+        "Biomol (C3) : 01/12 de 16h15 à 18h15",
+        "Biophysique (C3) : 24/11 de 14h à 16h",
+        "Biomol (C3) : 02/12 de 16h15 à 18h15",
+        "Biophysique : Pas de solution",
+      ],
+      "3-11": [
+        "Biocell (C2) : 21/11 de 14h à 16h",
+        "Biocell (C2) : 28/11 de 14h à 16h",
+      ],
+      "1-12": [
+        "Biophysique (C3) : 03/11 de 14h à 16h",
+        "Biomol : Pas de solutions",
+        "Biophysique (C3) : 24/11 de 14h à 16h",
+        "Biomol (C3) : 01/12 de 16h15 à 18h15",
+        "Biophysique (C3) : 01/12 de 14h à 16h",
+        "Biomol (C3) : 02/12 de 16h15 à 18h15",
+      ],
+      "2-12": [
+        "Biomol (C3) : 20/10 de 16h15 à 18h15",
+        "Biophysique : Pas de solution",
+        "Biomol (C3) : 01/12 de 16h15 à 18h15",
+        "Biophysique (C3) : 24/11 de 14h à 16h",
+        "Biomol (C3) : 02/12 de 16h15 à 18h15",
+        "Biophysique : Pas de solution",
+      ],
+      "3-12": [
+        "Biocell (C2) : 21/11 de 14h à 16h",
+        "Biocell (C2) : 28/11 de 14h à 16h",
+      ],
+    };
+
+    const classeEl = document.getElementById('classe');
+    const groupeEl = document.getElementById('groupe');
+    const showBtn = document.getElementById('showBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const results = document.getElementById('results');
+    const probList = document.getElementById('probList');
+    const solList = document.getElementById('solList');
+    const resTitle = document.getElementById('resTitle');
+    const badgeClasse = document.getElementById('badgeClasse');
+    const badgeGroupe = document.getElementById('badgeGroupe');
+    const emptyState = document.getElementById('emptyState');
+
+    function render(){
+      const key = `${classeEl.value}-${groupeEl.value}`;
+      const probs = PROBLEMES[key] || [];
+      const sols = SOLUTIONS[key] || [];
+
+      probList.innerHTML = '';
+      solList.innerHTML = '';
+      resTitle.textContent = 'Récapitulatif';
+      badgeClasse.textContent = `Classe ${classeEl.value}`;
+      badgeGroupe.textContent = `Groupe ${groupeEl.value}`;
+
+      const hasData = (probs && probs.length) || (sols && sols.length);
+      emptyState.hidden = !!hasData;
+
+      // Problèmes d'abord
+      probs.forEach(txt => {
+        const li = document.createElement('div');
+        li.className = 'item';
+        const dot = document.createElement('span');
+        dot.className = 'dot';
+        const strong = document.createElement('strong');
+        strong.textContent = 'Conflit';
+        const span = document.createElement('span');
+        span.className = 'muted';
+        span.textContent = ` : ${txt}`;
+        li.append(dot, strong, span);
+        probList.appendChild(li);
+      });
+
+      // Puis Solutions avec expansions demandées
+      sols.forEach(txt => {
+        const li = document.createElement('div');
+        li.className = 'item';
+        const dot = document.createElement('span');
+        dot.className = 'dot';
+        const { course, detail } = formatItem(txt);
+        const strong = document.createElement('strong');
+        strong.textContent = course;
+        const span = document.createElement('span');
+        span.className = 'muted';
+        span.textContent = detail;
+        li.append(dot, strong, span);
+        solList.appendChild(li);
+      });
+
+      results.classList.add('active');
+    }
+
+    showBtn.addEventListener('click', render);
+
+    copyBtn.addEventListener('click', () => {
+      const key = `${classeEl.value}-${groupeEl.value}`;
+      const probs = PROBLEMES[key] || [];
+      const sols = (SOLUTIONS[key] || []).map(s => {
+        const {course, detail} = formatItem(s);
+        return `${course}${detail}`;
+      });
+      const header = `Classe ${classeEl.value}, Groupe ${groupeEl.value}\n`;
+      const blockP = probs.length ? `Problèmes\n` + probs.map(i=>`• ${i}`).join('\n') + '\n\n' : '';
+      const blockS = `Solutions\n` + (sols.length ? sols.map(i=>`• ${i}`).join('\n') : 'Aucune information.');
+      const text = header + blockP + blockS;
+      navigator.clipboard.writeText(text).then(()=>{
+        copyBtn.textContent = 'Copié !';
+        setTimeout(()=> copyBtn.textContent = 'Copier', 1400);
+      });
+    });
+
+    // Affiche automatiquement une première combinaison
+    render();
+
+    // Année
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
