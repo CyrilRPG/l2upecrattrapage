@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Diploma Santé — Plateforme de rattrapage · L2 UPEC</title>
-  <meta name="description" content="Plateforme de rattrapage - L2 UPEC (Diploma Santé). Choisissez votre classe et groupe de TD pour voir les problèmes et les solutions disponibles." />
+  <meta name="description" content="Plateforme de rattrapage - L2 UPEC (Diploma Santé). Choisissez votre classe et groupe de TD pour voir les Conflits et les solutions disponibles." />
   <style>
     :root{
       --brand:#0ea5e9; /* cyan-500 */
@@ -66,7 +66,7 @@
       <div class="logo" aria-hidden="true"></div>
       <div>
         <h1>Diploma Santé · <span class="subtitle">Plateforme de rattrapage — L2 UPEC</span></h1>
-        <div class="subtitle">Choisissez votre <strong>classe</strong> et votre <strong>groupe de TD</strong>, puis cliquez sur <em>Afficher</em> pour voir d'abord les <strong>problèmes</strong>, puis les <strong>solutions</strong>.</div>
+        <div class="subtitle">Choisissez votre <strong>classe</strong> et votre <strong>groupe de TD</strong>, puis cliquez sur <em>Afficher</em> pour voir d'abord les <strong>Conflits</strong>, puis les <strong>solutions</strong>.</div>
       </div>
     </header>
 
@@ -112,7 +112,7 @@
           </div>
         </div>
 
-        <h3 class="section-title">Problèmes</h3>
+        <h3 class="section-title">Conflits</h3>
         <div class="list" id="probList"></div>
 
         <h3 class="section-title">Solutions</h3>
@@ -153,7 +153,7 @@
       return { course, detail: detail ? `: ${detail}` : '' };
     };
 
-    // --- Données Problèmes ---
+    // --- Données Conflits ---
     const PROBLEMES = {
       "1-1": ["16/10 tous les cours"],
       "2-1": ["16/10 tous les cours"],
@@ -429,7 +429,7 @@
       let probs = PROBLEMES[key] || [];
       let sols  = SOLUTIONS[key] || [];
 
-      // ⚠️ Règle demandée : pour Classe 1 / Groupe 1, ne rien afficher (ni problèmes, ni solutions)
+      // ⚠️ Règle demandée : pour Classe 1 / Groupe 1, ne rien afficher (ni Conflits, ni solutions)
       if (key === '1-1') {
         probs = [];
         sols = [];
@@ -454,7 +454,7 @@
       if (key === '1-1') { probs = []; sols = []; }
 
       const header = `Classe ${classeEl.value}, Groupe ${groupeEl.value}\n`;
-      const blocP = probs.length ? `\nProblèmes:\n` + probs.map(i=>`• ${normalizeCours(mapMatiere(i))}`).join('\n') : '';
+      const blocP = probs.length ? `\nConflits:\n` + probs.map(i=>`• ${normalizeCours(mapMatiere(i))}`).join('\n') : '';
       const blocS = sols.length ? `\nSolutions:\n` + sols.map(i=>`• ${normalizeCours(mapMatiere(i))}`).join('\n') : '';
       const body = (blocP + blocS) || '\nAucune information.';
       const text = header + body;
