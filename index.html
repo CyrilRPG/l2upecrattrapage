@@ -75,7 +75,7 @@
         <div>
           <label for="classe">Classe</label>
           <select id="classe">
-            <option value="1">Classe 1</option>
+            <option value="1" selected>Classe 1</option>
             <option value="2">Classe 2</option>
             <option value="3">Classe 3</option>
           </select>
@@ -83,7 +83,7 @@
         <div>
           <label for="groupe">Groupe de TD</label>
           <select id="groupe">
-            <option value="1">Groupe 1</option>
+            <option value="1" selected>Groupe 1</option>
             <option value="2">Groupe 2</option>
             <option value="3">Groupe 3</option>
             <option value="4">Groupe 4</option>
@@ -143,7 +143,7 @@
         .replace(/\(C([123])\)/g, '(Classe $1)')
         .replace(/:\s*pas de solution/gi, ' : Pas de solution')
         .replace(/\bPas de solutions\b/gi, 'Pas de solution')
-        .replace(/\bde 14h à 16\b/g, 'de 14h à 16h'); // corrige "16" → "16h"
+        .replace(/\bde 14h à 16\b/g, 'de 14h à 16h');
     };
     const formatItem = (raw) => {
       const replaced = normalizeCours(mapMatiere(raw.trim()));
@@ -153,83 +153,241 @@
       return { course, detail: detail ? `: ${detail}` : '' };
     };
 
-    // --- Données PROBLEMES ---
+    // --- Données Problèmes ---
     const PROBLEMES = {
-      "1-1": ["16/10 tous les cours"], "2-1": ["16/10 tous les cours"], "3-1": ["08/10 cours de 14h à 16h"],
-      "1-2": ["16/10 cours de 14h à 16h"], "2-2": ["16/10 cours de 14h à 16h"], "3-2": ["08/10 cours de 14h à 16h"],
+      "1-1": ["16/10 tous les cours"],
+      "2-1": ["16/10 tous les cours"],
+      "3-1": ["08/10 cours de 14h à 16h"],
+
+      "1-2": ["16/10 cours de 14h à 16h"],
+      "2-2": ["16/10 cours de 14h à 16h"],
+      "3-2": ["08/10 cours de 14h à 16h"],
+
       "1-3": ["30/10 tous les cours","20/11 cours de 14h à 18h15","27/11 cours de 11h15 à 13h15"],
       "2-3": ["20/11 tous les cours"],
       "3-3": ["30/10 cours de 9h à 13h15","20/11 cours à 14h"],
+
       "1-4": ["30/10 tous les cours","20/11 cours de 14h à 18h15","27/11 cours de 11h15 à 13h15"],
       "2-4": ["20/11 tous les cours"],
       "3-4": ["30/10 cours de 9h à 13h15","20/11 cours de 14h"],
+
       "1-5": ["09/10 tous les cours","27/11 cours de 14h à 18h15"],
       "2-5": ["09/10 cours de 16h15 à 18h15","27/11 tous les cours"],
       "3-5": ["09/10 cours de 14h à 16h","30/10 cours de 14h à 16h","27/11 tous les cours"],
+
       "1-6": ["09/10 tous les cours","20/11 cours de 11h15 à 13h15","27/11 cours de 14h à 18h15"],
       "2-6": ["09/10 cours de 16h15 à 18h15","27/11 tous les cours"],
       "3-6": ["09/10 cours de 14h à 16h","30/10 tous les cours","20/11 cours de 11h15 à 13h15","27/11 tous les cours"],
+
       "1-7": ["20/11 cours de 11h15 à 13h15"],
       "2-7": ["02/10 tous les cours"],
       "3-7": ["02/10 cours de 14h à 16h","12/11 tous les cours","20/11 cours de 9h à 13h15"],
+
       "1-8": ["—"],
       "2-8": ["02/10 cours de 14h à 16h"],
       "3-8": ["02/10 cours de 14h à 16h","12/11 tous les cours"],
+
       "1-9": ["13/11 tous les cours","27/11 cours de 11h15 à 13h15","04/12 cours de 11h15 à 13h15"],
       "2-9": ["13/11 tous les cours"],
       "3-9": ["04/12 cours de 9h à 13h15"],
+
       "1-10": ["13/11 tous les cours","27/11 cours de 11h15 à 13h15","04/12 cours de 11h15 à 13h15"],
       "2-10": ["13/11 tous les cours"],
       "3-10": ["04/12 cours de 9h à 13h15"],
+
       "1-11": ["16/10 tous les cours","27/11 cours de 14h à 18h","04/12 cours de 14h à 18h"],
       "2-11": ["16/10 tous les cours","27/11 cours de 14h à 18h","04/12 cours de 14h à 18h"],
       "3-11": ["27/11 cours de 14h à 16h","04/11 tous les cours"],
+
       "1-12": ["16/10 tous les cours","27/11 cours de 14h à 18h","04/12 cours de 14h à 18h"],
       "2-12": ["16/10 tous les cours","27/11 tous les cours","04/12 tous les cours"],
       "3-12": ["27/11 cours de 14h à 16h","04/11 cours de 14h à 16h"],
     };
 
-    // --- Données SOLUTIONS (exactement celles fournies) ---
+    // --- Données Solutions ---
     const SOLUTIONS = {
-      "1-1": ["Biophysique (C3) : 04/11 de 14h à 16h","Biomol (C2) : 02/10 de 14h à 16h"],
-      "2-1": ["Biomol (C3) : 20/11 de 16h15 à 18h15","Biophysique (C3) : 04/11 de 14h à 16h"],
-      "3-1": ["Biomol (C1) : 09/11 de 16h15 à 18h15"],
-      "1-2": ["Biophysique (C3) : 04/11 de 14h à 16"],
-      "2-2": ["Biomol (C3) : 20/11 de 16h15 à 18h15"],
-      "3-2": ["Biomol (C1) : 09/11 de 16h15 à 18h15"],
-      "1-3": ["Biostats : Pas de solution","Biocell (C3) : 21/10 de 14h à 16h","Biomol (C3) : 24/11 de 16h15 à 18h15","Biophysique (C3) : 17/11 de 14h à 16h","Biocell (C2) : 28/11 de 14h à 16h"],
-      "2-3": ["Biomol (C3) : 24/11 de 16h15 à 18h15","Biophysique (C3) : 17/11 de 14h à 16h"],
-      "3-3": ["Bioch (C1) : 10/11 de 9h à 11h","Biostats (C2) : 27/10 de 11h15 à 13h15","Immuno (C1) : 10/11 de 11h15 à 13h15"],
-      "1-4": ["Biostats : Pas de solution","Biocell (C3) : 21/10 de 14h à 16h","Biomol (C3) : 24/11 de 16h15 à 18h15","Biophysique (C3) : 17/11 de 14h à 16h","Biocell (C2) : 28/11 de 14h à 16h"],
-      "2-4": ["Biomol (C3) : 24/11 de 16h15 à 18h15","Biophysique (C3) : 17/11 de 14h à 16h"],
-      "3-4": ["Bioch (C1) : 10/11 de 9h à 11h","Biostats (C2) : 27/10 de 11h15 à 13h15","Immuno (C1) : 10/11 de 11h15 à 13h15"],
-      "1-5": ["Biophysique : Pas de solution","Biomol (C3) : 08/10 de 14h à 16h","Biophysique (C3) : 24/11 de 14h à 16h","Biomol (C3) : 01/12 de 16h15 à 18h15"],
-      "2-5": ["Biophysique : Pas de solution","Biomol (C3) : 01/12 de 16h15 à 18h15","Biophysique (C3) : 24/11 de 14h à 16h"],
-      "3-5": ["Immuno (C1) : 29/09 de 9h à 11h","Immuno (C1) : 27/10 de 11h15 à 13h15","Biocell (C2) : 21/11 de 14h à 16h"],
-      "1-6": ["Biophysique : Pas de solution","Biomol (C3) : 08/10 de 14h à 16h","Biocell (C2) : 21/11 de 14h à 16h","Biophysique (C3) : 24/11 de 14h à 16h","Biomol (C3) : 01/12 de 16h15 à 18h15"],
-      "2-6": ["Biophysique : Pas de solution","Biomol (C3) : 01/12 de 16h15 à 18h15","Biophysique (C3) : 24/11 de 14h à 16h"],
-      "3-6": ["Immuno (C1) : 29/09 de 9h à 11h","Immuno (C1) : 27/10 de 11h15 à 13h15","Bioch (C2) : 24/11 de 9h à 11h","Biostats (C2) : 24/11 de 11h15 à 13h15","Biocell (C2) : 21/11 de 14h à 16h"],
-      "1-7": ["Biocell (C2) : 21/11 de 14h à 16h"],
-      "2-7": ["Biomol : Pas de solution","Biophysique : Pas de solution"],
-      "3-7": ["Biophysique : Pas de solution","Biophy (C2) : 13/11 de 16h15 à 18h15","Biocell (C1) : 11/11 de 14h à 16h","Bioch (C2) : 24/11 de 9h à 11h","Biostats (C2) : 24/11 de 11h15 à 13h15"],
-      "1-8": ["-"],
-      "2-8": ["Biomol: pas de solution"],
-      "3-8": ["Biophy (C2) : 02/11 de 16h15 à 18h15","Biophy (C2) : 13/11 de 16h15 à 18h15","Biocell (C1) : 11/11 de 14h à 16h"],
-      "1-9": ["Biophysique (C3) : 12/11 de 14h à 16h","Biomol (C3) : 17/11 de 16h15 à 18h15","Biocell (C2) : 28/11 de 14h à 16h","Biocell (C2) : 01/12 de 14h à 16h"],
-      "2-9": ["Biomol (C3) : 17/11 de 16h15 à 18h15","Biophysique (C3) : 12/11 de 14h à 16h"],
-      "3-9": ["Bioch (C1) : 01/12 de 11h15 à 13h15","Biostats (C1) : 01/12 de 9h à 11h"],
-      "1-10": ["Biophysique (C3) : 12/11 de 14h à 16h","Biomol (C2) : 17/11 de 16h15 à 18h15","Biocell (C2) : 28/11 de 14h à 16h","Biocell (C2) : 01/12 de 14h à 16h"],
-      "2-10": ["Biomol (C3) : 17/11 de 16h15 à 18h15","Biophysique (C3) : 12/11 de 14h à 16h"],
-      "3-10": ["Bioch (C1) : 01/12 de 11h15 à 13h15","Biostats (C1) : 01/12 de 9h à 11h"],
-      "1-11": ["Biophysique (C3) : 03/11 de 14h à 16h","Biomol : Pas de solutions","Biophysique (C3) : 24/11 de 14h à 16h","Biomol (C3) : 01/12 de 16h15 à 18h15","Biophysique (C3) : 01/12 de 14h à 16h","Biomol (C3) : 02/12 de 16h15 à 18h15"],
-      "2-11": ["Biomol (C3) : 20/10 de 16h15 à 18h15","Biophysique : Pas de solution","Biomol (C3) : 01/12 de 16h15 à 18h15","Biophysique (C3) : 24/11 de 14h à 16h","Biomol (C3) : 02/12 de 16h15 à 18h15","Biophysique : Pas de solution"],
-      "3-11": ["Biocell (C2) : 21/11 de 14h à 16h","Biocell (C2) : 28/11 de 14h à 16h"],
-      "1-12": ["Biophysique (C3) : 03/11 de 14h à 16h","Biomol : Pas de solutions","Biophysique (C3) : 24/11 de 14h à 16h","Biomol (C3) : 01/12 de 16h15 à 18h15","Biophysique (C3) : 01/12 de 14h à 16h","Biomol (C3) : 02/12 de 16h15 à 18h15"],
-      "2-12": ["Biomol (C3) : 20/10 de 16h15 à 18h15","Biophysique : Pas de solution","Biomol (C3) : 01/12 de 16h15 à 18h15","Biophysique (C3) : 24/11 de 14h à 16h","Biomol (C3) : 02/12 de 16h15 à 18h15","Biophysique : Pas de solution"],
-      "3-12": ["Biocell (C2) : 21/11 de 14h à 16h","Biocell (C2) : 28/11 de 14h à 16h"],
+      "1-1": [
+        "Biophysique (C3) : 04/11 de 14h à 16h",
+        "Biomol (C2) : 02/10 de 14h à 16h",
+      ],
+      "2-1": [
+        "Biomol (C3) : 20/11 de 16h15 à 18h15",
+        "Biophysique (C3) : 04/11 de 14h à 16h",
+      ],
+      "3-1": [
+        "Biomol (C1) : 09/11 de 16h15 à 18h15",
+      ],
+      "1-2": [
+        "Biophysique (C3) : 04/11 de 14h à 16",
+      ],
+      "2-2": [
+        "Biomol (C3) : 20/11 de 16h15 à 18h15",
+      ],
+      "3-2": [
+        "Biomol (C1) : 09/11 de 16h15 à 18h15",
+      ],
+      "1-3": [
+        "Biostats : Pas de solution",
+        "Biocell (C3) : 21/10 de 14h à 16h",
+        "Biomol (C3) : 24/11 de 16h15 à 18h15",
+        "Biophysique (C3) : 17/11 de 14h à 16h",
+        "Biocell (C2) : 28/11 de 14h à 16h",
+      ],
+      "2-3": [
+        "Biomol (C3) : 24/11 de 16h15 à 18h15",
+        "Biophysique (C3) : 17/11 de 14h à 16h",
+      ],
+      "3-3": [
+        "Bioch (C1) : 10/11 de 9h à 11h",
+        "Biostats (C2) : 27/10 de 11h15 à 13h15",
+        "Immuno (C1) : 10/11 de 11h15 à 13h15",
+      ],
+      "1-4": [
+        "Biostats : Pas de solution",
+        "Biocell (C3) : 21/10 de 14h à 16h",
+        "Biomol (C3) : 24/11 de 16h15 à 18h15",
+        "Biophysique (C3) : 17/11 de 14h à 16h",
+        "Biocell (C2) : 28/11 de 14h à 16h",
+      ],
+      "2-4": [
+        "Biomol (C3) : 24/11 de 16h15 à 18h15",
+        "Biophysique (C3) : 17/11 de 14h à 16h",
+      ],
+      "3-4": [
+        "Bioch (C1) : 10/11 de 9h à 11h",
+        "Biostats (C2) : 27/10 de 11h15 à 13h15",
+        "Immuno (C1) : 10/11 de 11h15 à 13h15",
+      ],
+      "1-5": [
+        "Biophysique : Pas de solution",
+        "Biomol (C3) : 08/10 de 14h à 16h",
+        "Biophysique (C3) : 24/11 de 14h à 16h",
+        "Biomol (C3) : 01/12 de 16h15 à 18h15",
+      ],
+      "2-5": [
+        "Biophysique : Pas de solution",
+        "Biomol (C3) : 01/12 de 16h15 à 18h15",
+        "Biophysique (C3) : 24/11 de 14h à 16h",
+      ],
+      "3-5": [
+        "Immuno (C1) : 29/09 de 9h à 11h",
+        "Immuno (C1) : 27/10 de 11h15 à 13h15",
+        "Biocell (C2) : 21/11 de 14h à 16h",
+      ],
+      "1-6": [
+        "Biophysique : Pas de solution",
+        "Biomol (C3) : 08/10 de 14h à 16h",
+        "Biocell (C2) : 21/11 de 14h à 16h",
+        "Biophysique (C3) : 24/11 de 14h à 16h",
+        "Biomol (C3) : 01/12 de 16h15 à 18h15",
+      ],
+      "2-6": [
+        "Biophysique : Pas de solution",
+        "Biomol (C3) : 01/12 de 16h15 à 18h15",
+        "Biophysique (C3) : 24/11 de 14h à 16h",
+      ],
+      "3-6": [
+        "Immuno (C1) : 29/09 de 9h à 11h",
+        "Immuno (C1) : 27/10 de 11h15 à 13h15",
+        "Bioch (C2) : 24/11 de 9h à 11h",
+        "Biostats (C2) : 24/11 de 11h15 à 13h15",
+        "Biocell (C2) : 21/11 de 14h à 16h",
+      ],
+      "1-7": [
+        "Biocell (C2) : 21/11 de 14h à 16h",
+      ],
+      "2-7": [
+        "Biomol : Pas de solution",
+        "Biophysique : Pas de solution",
+      ],
+      "3-7": [
+        "Biophysique : Pas de solution",
+        "Biophy (C2) : 13/11 de 16h15 à 18h15",
+        "Biocell (C1) : 11/11 de 14h à 16h",
+        "Bioch (C2) : 24/11 de 9h à 11h",
+        "Biostats (C2) : 24/11 de 11h15 à 13h15",
+      ],
+      "1-8": [
+        "-",
+      ],
+      "2-8": [
+        "Biomol: pas de solution",
+      ],
+      "3-8": [
+        "Biophy (C2) : 02/11 de 16h15 à 18h15",
+        "Biophy (C2) : 13/11 de 16h15 à 18h15",
+        "Biocell (C1) : 11/11 de 14h à 16h",
+      ],
+      "1-9": [
+        "Biophysique (C3) : 12/11 de 14h à 16h",
+        "Biomol (C3) : 17/11 de 16h15 à 18h15",
+        "Biocell (C2) : 28/11 de 14h à 16h",
+        "Biocell (C2) : 01/12 de 14h à 16h",
+      ],
+      "2-9": [
+        "Biomol (C3) : 17/11 de 16h15 à 18h15",
+        "Biophysique (C3) : 12/11 de 14h à 16h",
+      ],
+      "3-9": [
+        "Bioch (C1) : 01/12 de 11h15 à 13h15",
+        "Biostats (C1) : 01/12 de 9h à 11h",
+      ],
+      "1-10": [
+        "Biophysique (C3) : 12/11 de 14h à 16h",
+        "Biomol (C2) : 17/11 de 16h15 à 18h15",
+        "Biocell (C2) : 28/11 de 14h à 16h",
+        "Biocell (C2) : 01/12 de 14h à 16h",
+      ],
+      "2-10": [
+        "Biomol (C3) : 17/11 de 16h15 à 18h15",
+        "Biophysique (C3) : 12/11 de 14h à 16h",
+      ],
+      "3-10": [
+        "Bioch (C1) : 01/12 de 11h15 à 13h15",
+        "Biostats (C1) : 01/12 de 9h à 11h",
+      ],
+      "1-11": [
+        "Biophysique (C3) : 03/11 de 14h à 16h",
+        "Biomol : Pas de solutions",
+        "Biophysique (C3) : 24/11 de 14h à 16h",
+        "Biomol (C3) : 01/12 de 16h15 à 18h15",
+        "Biophysique (C3) : 01/12 de 14h à 16h",
+        "Biomol (C3) : 02/12 de 16h15 à 18h15",
+      ],
+      "2-11": [
+        "Biomol (C3) : 20/10 de 16h15 à 18h15",
+        "Biophysique : Pas de solution",
+        "Biomol (C3) : 01/12 de 16h15 à 18h15",
+        "Biophysique (C3) : 24/11 de 14h à 16h",
+        "Biomol (C3) : 02/12 de 16h15 à 18h15",
+        "Biophysique : Pas de solution",
+      ],
+      "3-11": [
+        "Biocell (C2) : 21/11 de 14h à 16h",
+        "Biocell (C2) : 28/11 de 14h à 16h",
+      ],
+      "1-12": [
+        "Biophysique (C3) : 03/11 de 14h à 16h",
+        "Biomol : Pas de solutions",
+        "Biophysique (C3) : 24/11 de 14h à 16h",
+        "Biomol (C3) : 01/12 de 16h15 à 18h15",
+        "Biophysique (C3) : 01/12 de 14h à 16h",
+        "Biomol (C3) : 02/12 de 16h15 à 18h15",
+      ],
+      "2-12": [
+        "Biomol (C3) : 20/10 de 16h15 à 18h15",
+        "Biophysique : Pas de solution",
+        "Biomol (C3) : 01/12 de 16h15 à 18h15",
+        "Biophysique (C3) : 24/11 de 14h à 16h",
+        "Biomol (C3) : 02/12 de 16h15 à 18h15",
+        "Biophysique : Pas de solution",
+      ],
+      "3-12": [
+        "Biocell (C2) : 21/11 de 14h à 16h",
+        "Biocell (C2) : 28/11 de 14h à 16h",
+      ],
     };
 
-    // --- Sélecteurs ---
     const classeEl = document.getElementById('classe');
     const groupeEl = document.getElementById('groupe');
     const showBtn = document.getElementById('showBtn');
@@ -242,39 +400,10 @@
     const badgeGroupe = document.getElementById('badgeGroupe');
     const emptyState = document.getElementById('emptyState');
 
-    function render(){
-      const key = `${classeEl.value}-${groupeEl.value}`;
-      const probs = PROBLEMES[key] || [];
-      const sols = SOLUTIONS[key] || [];
-
-      // reset
-      probList.innerHTML = '';
-      solList.innerHTML = '';
-      resTitle.textContent = 'Récapitulatif';
-      badgeClasse.textContent = `Classe ${classeEl.value}`;
-      badgeGroupe.textContent = `Groupe ${groupeEl.value}`;
-
-      const hasData = (probs && probs.length) || (sols && sols.length);
-      emptyState.hidden = !!hasData;
-
-      // Problèmes d'abord
-      probs.forEach(txt => {
-        const li = document.createElement('div');
-        li.className = 'item';
-        const dot = document.createElement('span');
-        dot.className = 'dot';
-        const strong = document.createElement('strong');
-        strong.textContent = 'Conflit';
-        const span = document.createElement('span');
-        span.className = 'muted';
-        span.textContent = ` : ${txt}`;
-        li.append(dot, strong, span);
-        probList.appendChild(li);
-      });
-
-      // Solutions (expansions matières + (C1) → (Classe 1))
-      sols.forEach(txt => {
-        const { course, detail } = formatItem(txt);
+    function fillList(container, arr){
+      container.innerHTML = '';
+      arr.forEach(txt => {
+        const {course, detail} = formatItem(txt);
         const li = document.createElement('div');
         li.className = 'item';
         const dot = document.createElement('span');
@@ -285,33 +414,58 @@
         span.className = 'muted';
         span.textContent = detail;
         li.append(dot, strong, span);
-        solList.appendChild(li);
+        container.appendChild(li);
       });
+    }
 
+    function render(){
+      const key = `${classeEl.value}-${groupeEl.value}`;
+
+      // Badges
+      badgeClasse.textContent = `Classe ${classeEl.value}`;
+      badgeGroupe.textContent = `Groupe ${groupeEl.value}`;
+
+      // Récupération données
+      let probs = PROBLEMES[key] || [];
+      let sols  = SOLUTIONS[key] || [];
+
+      // ⚠️ Règle demandée : pour Classe 1 / Groupe 1, ne rien afficher (ni problèmes, ni solutions)
+      if (key === '1-1') {
+        probs = [];
+        sols = [];
+      }
+
+      // Affichage
+      fillList(probList, probs);
+      fillList(solList, sols);
+
+      const hasAny = probs.length > 0 || sols.length > 0;
+      emptyState.hidden = hasAny; // montrer le vide si rien à afficher
       results.classList.add('active');
+      resTitle.textContent = hasAny ? 'Récapitulatif' : 'Aucun résultat';
     }
 
     showBtn.addEventListener('click', render);
 
     copyBtn.addEventListener('click', () => {
       const key = `${classeEl.value}-${groupeEl.value}`;
-      const probs = PROBLEMES[key] || [];
-      const sols = (SOLUTIONS[key] || []).map(s => {
-        const {course, detail} = formatItem(s);
-        return `${course}${detail}`;
-      });
+      let probs = PROBLEMES[key] || [];
+      let sols  = SOLUTIONS[key] || [];
+      if (key === '1-1') { probs = []; sols = []; }
+
       const header = `Classe ${classeEl.value}, Groupe ${groupeEl.value}\n`;
-      const blockP = probs.length ? `Problèmes\n` + probs.map(i=>`• ${i}`).join('\n') + '\n\n' : '';
-      const blockS = `Solutions\n` + (sols.length ? sols.map(i=>`• ${i}`).join('\n') : 'Aucune information.');
-      const text = header + blockP + blockS;
+      const blocP = probs.length ? `\nProblèmes:\n` + probs.map(i=>`• ${normalizeCours(mapMatiere(i))}`).join('\n') : '';
+      const blocS = sols.length ? `\nSolutions:\n` + sols.map(i=>`• ${normalizeCours(mapMatiere(i))}`).join('\n') : '';
+      const body = (blocP + blocS) || '\nAucune information.';
+      const text = header + body;
+
       navigator.clipboard.writeText(text).then(()=>{
         copyBtn.textContent = 'Copié !';
         setTimeout(()=> copyBtn.textContent = 'Copier', 1400);
       });
     });
 
-    // --- IMPORTANT : ne rien afficher au chargement ---
-    // (pas d'appel initial à render, et on s'assure que la section est masquée)
+    // État par défaut : rien d'affiché, même si Classe 1 / Groupe 1 sont sélectionnés
     results.classList.remove('active');
     emptyState.hidden = true;
 
