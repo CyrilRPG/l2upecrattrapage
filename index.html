@@ -429,10 +429,10 @@
       let probs = PROBLEMES[key] || [];
       let sols  = SOLUTIONS[key] || [];
 
-      // ⚠️ Règle demandée : pour Classe 1 / Groupe 1, ne rien afficher (ni Conflits, ni solutions)
+      // ✅ Cas spécial demandé : Classe 1 / Groupe 1 => afficher "problème" et "solution:"
       if (key === '1-1') {
-        probs = [];
-        sols = [];
+        probs = ['problème'];
+        sols  = ['solution:'];
       }
 
       // Affichage
@@ -451,7 +451,12 @@
       const key = `${classeEl.value}-${groupeEl.value}`;
       let probs = PROBLEMES[key] || [];
       let sols  = SOLUTIONS[key] || [];
-      if (key === '1-1') { probs = []; sols = []; }
+
+      // même cas spécial pour la copie
+      if (key === '1-1') {
+        probs = ['problème'];
+        sols  = ['solution:'];
+      }
 
       const header = `Classe ${classeEl.value}, Groupe ${groupeEl.value}\n`;
       const blocP = probs.length ? `\nConflits:\n` + probs.map(i=>`• ${normalizeCours(mapMatiere(i))}`).join('\n') : '';
@@ -465,7 +470,7 @@
       });
     });
 
-    // État par défaut : rien d'affiché, même si Classe 1 / Groupe 1 sont sélectionnés
+    // État par défaut : rien d'affiché
     results.classList.remove('active');
     emptyState.hidden = true;
 
